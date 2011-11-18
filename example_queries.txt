@@ -1,0 +1,33 @@
+SELECT DISTINCT ?node ?parent ?value
+			      WHERE{{ 
+			        LET(?node := "ALL")
+			        LET(?parent := "")
+			        LET(?value := 0)}  
+			      UNION
+			        {?s npdv:name ?node;
+			        a npdv:Company .
+			        [] a npdv:Field ;
+			        npdv:hasCompany ?s .
+			        LET(?parent := "ALL")
+			        LET(?value := 0)}
+			      UNION
+			        {?s npdv:name ?node;
+			        a npdv:Field ;
+			        npdv:hasCompany [npdv:name ?parent] .
+			        [] a npdv:ExplorationWellbore ;
+			        npdv:hasField ?s .
+			        LET(?value := 0)}
+			      UNION
+			        {?s npdv:name ?node;
+			        a npdv:ExplorationWellbore ;
+			        npdv:hasField [npdv:name ?parent ] ;
+			        npdv:numberOfDrillingDays ?value;
+
+
+
+
+ns1:Nummer_der_Beroepsklasse
+ns1:Letter__Onderdeel_beroepsklasse_
+<http://www.data2semantics.org/core/Table_1/BENAMING_van_de_onderdeelen_der_onderscheidene_beroepsklassen__met_de_daartoe_behoordende_beroepen>
+
+
