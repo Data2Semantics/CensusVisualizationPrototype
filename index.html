@@ -1,0 +1,160 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Demo Laurens (Sgvizler)</title>
+        <meta charset="UTF-8"/>
+        <link rel="shortcut icon" href="http://sgvizler.googlecode.com/svn/www/favicon.ico" />
+        <link rel="stylesheet" type="text/css" href="http://sgvizler.googlecode.com/svn/www/sgvizler.css" />
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+        <script type="text/javascript" id="sgvzlr_script" src="http://sgvizler.googlecode.com/svn/release/0.4/sgvizler.js"></script>
+        <script type="text/javascript">
+            //// Query settings. The defaults settings are listed.
+            sgvizler.queryOptions = {
+                'endpoint':             "http://sws.ifi.uio.no/sparql/world",
+                // Endpoint output format. 
+                'endpoint_output':      'json',  // 'xml' or 'json' 
+                // This string is appended the 'endpoint' variable and the query to it again to give a link to the "raw" query results.
+                'endpoint_query_url':   "?output=text&amp;query=",
+                // URL to SPARQL validation service. The query is appended to it. 
+                'validator_query_url':  "http://www.sparql.org/query-validator?languageSyntax=SPARQL&amp;outputFormat=sparql&amp;linenumbers=true&amp;query=",
+                // Default chart type. 
+                'chart':                'gLineChart',
+                // Default log level. Must be either 0, 1, or 2. 
+                'loglevel':             2
+            };
+
+            // Prefixes
+            // Add convenient prefixes for your dataset. rdf, rdfs, xsd, owl
+            // are already set.  Examples: 
+            sgvizler.namespaces['ns1'] = 'http://www.data2semantics.org/core/Table_1/';
+            sgvizler.namespaces['ns2'] = 'http://www.data2semantics.org/core/Table_1/2';
+            sgvizler.namespaces['ns3'] = 'http://www.data2semantics.org/core/Table_1/3';
+            sgvizler.namespaces['ns4'] = 'http://www.data2semantics.org/core/Table_1/12';
+            sgvizler.namespaces['d2s'] = 'http://www.data2semantics.org/core/';
+            sgvizler.namespaces['qb'] = 'http://purl.org/linked-data/cube#';
+            sgvizler.namespaces['skos'] = 'http://www.w3.org/2004/02/skos/core#';
+
+            
+
+            sgvizler.chartOptions = { 
+               'width':           '800',
+               'height':          '400',
+               'chartArea':       { left: '20%', top: '5%', width: '75%', height: '80%' },
+                'gGeoMap': {
+                 'dataMode':           'markers'
+                },
+                'gMap': {
+                 'dataMode':           'markers'
+                },
+                'sMap': {
+                 'dataMode':           'markers',
+                 'showTip':            true,
+                 'useMapTypeControl':  true
+                } 
+            };
+
+            localCleopatriaQueryOptions = {
+                'endpoint':             "http://localhost:3020/sparql/",
+                'endpoint_output':      'json',  // 'xml' or 'json' 
+                'endpoint_query_url':   "?format=json&amp;query=",
+                'validator_query_url':  "http://www.sparql.org/query-validator?languageSyntax=SPARQL&amp;outputFormat=sparql&amp;linenumbers=true&amp;query=",
+                'chart':                'gLineChart',
+                'loglevel':             2
+            };
+            
+            localSesameQueryOptions = {
+                'endpoint':             "http://localhost:8080/openrdf-workbench/repositories/census/query",
+                'endpoint_output':      'json',  // 'xml' or 'json' 
+                'endpoint_query_url':   "?queryLn=SPARQL&amp;limit=0&amp;infer=true&amp;query=",
+                'validator_query_url':  "http://www.sparql.org/query-validator?languageSyntax=SPARQL&amp;outputFormat=sparql&amp;linenumbers=true&amp;query=",
+                'chart':                'gLineChart',
+                'loglevel':             2
+            };
+           
+           localJosekiQueryOptions = {
+                'endpoint':             "http://localhost:2020/books",
+                'endpoint_output':      'json',  // 'xml' or 'json' 
+                'endpoint_query_url':   "?output=json&amp;query=",
+                'validator_query_url':  "http://www.sparql.org/query-validator?languageSyntax=SPARQL&amp;outputFormat=sparql&amp;linenumbers=true&amp;query=",
+                'chart':                'gLineChart',
+                'loglevel':             2
+           }
+            
+            sgvizler.queryOptions = localJosekiQueryOptions;
+            $(document).ready(sgvizler.go());
+        </script>
+    </head>
+    <body>
+                 <div id="treemap"
+             data-sgvizler-query='SELECT DISTINCT ?node ?parent ?value
+WHERE {
+    {
+        BIND("TOP" AS ?node)
+        BIND("" AS ?parent)
+        BIND(0 AS ?value)
+    } UNION
+    {
+        BIND(0 AS ?value).
+        BIND("TOP" AS ?parent).
+        [] ns1:Nummer_der_Beroepsklasse ?node
+       
+    } UNION 
+    {
+        BIND(0 AS ?value).
+        [] ns1:Letter__Onderdeel_beroepsklasse_ ?node.
+        ?node skos:broader ?parent
+        
+    } UNION 
+    {
+         []  &lt;http://www.data2semantics.org/core/populationSize&gt; ?value;
+            &lt;http://www.data2semantics.org/core/Table_1/BENAMING_van_de_onderdeelen_der_onderscheidene_beroepsklassen__met_de_daartoe_behoordende_beroepen&gt; ?node .
+         FILTER (?value &gt; 0).
+         ?node skos:broader ?parent
+    }
+}'
+             data-sgvizler-chart="gTreeMap"
+             style="width:600px; height:400px;"
+             ></div> 
+<!--        <div id="table"
+             data-sgvizler-query='SELECT DISTINCT ?node ?parent ?value
+WHERE {
+    {
+        BIND("TOP" AS ?node)
+        BIND("" AS ?parent)
+        BIND(0 AS ?value)
+    } UNION
+    {
+        BIND(0 AS ?value).
+        BIND("TOP" AS ?parent).
+        [] ns1:Nummer_der_Beroepsklasse ?tmpnode.
+        ?tmpnode rdfs:haslabel ?node
+       
+    } UNION 
+    {
+        BIND(0 AS ?value).
+        [] ns1:Letter__Onderdeel_beroepsklasse_ ?tmpnode.
+        ?tmpnode rdfs:haslabel ?node.
+        ?tmpnode skos:broader ?parent
+        
+    } UNION 
+    {
+         []  &lt;http://www.data2semantics.org/core/populationSize&gt; ?value;
+            &lt;http://www.data2semantics.org/core/Table_1/BENAMING_van_de_onderdeelen_der_onderscheidene_beroepsklassen__met_de_daartoe_behoordende_beroepen&gt; ?tmpnode .
+         FILTER (?value &gt; 0).
+         ?tmpnode skos:broader ?tmpparent.
+         ?tmpnode rdfs:haslabel ?node.
+         ?tmpparent rdfs:haslabel ?parent
+    }
+} LIMIT 100'
+             data-sgvizler-chart="gTable"
+             style="width:1400px; height:600px;"
+             ></div>-->
+        
+
+
+
+
+
+    </body>
+</html>
