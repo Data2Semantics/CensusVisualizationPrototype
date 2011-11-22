@@ -1,33 +1,56 @@
-SELECT DISTINCT ?node ?parent ?value
-			      WHERE{{ 
-			        LET(?node := "ALL")
-			        LET(?parent := "")
-			        LET(?value := 0)}  
-			      UNION
-			        {?s npdv:name ?node;
-			        a npdv:Company .
-			        [] a npdv:Field ;
-			        npdv:hasCompany ?s .
-			        LET(?parent := "ALL")
-			        LET(?value := 0)}
-			      UNION
-			        {?s npdv:name ?node;
-			        a npdv:Field ;
-			        npdv:hasCompany [npdv:name ?parent] .
-			        [] a npdv:ExplorationWellbore ;
-			        npdv:hasField ?s .
-			        LET(?value := 0)}
-			      UNION
-			        {?s npdv:name ?node;
-			        a npdv:ExplorationWellbore ;
-			        npdv:hasField [npdv:name ?parent ] ;
-			        npdv:numberOfDrillingDays ?value;
-
-
-
-
 ns1:Nummer_der_Beroepsklasse
 ns1:Letter__Onderdeel_beroepsklasse_
 <http://www.data2semantics.org/core/Table_1/BENAMING_van_de_onderdeelen_der_onderscheidene_beroepsklassen__met_de_daartoe_behoordende_beroepen>
 
-
+====== Query for occupation treemap =====
+Several issues with this query: It uses LET (only supported by ARQ), because Joseki throws an incorrect error when using BIND in this specific situation...
+Additionally: this query is SLOW, because a large number of results are returned (~0.6 mb). Sparql subqueries not an alternative: based on join and not on union. 
+Solution probaly: execute queries independent of each other and merge result in JS. This allows the use of DISTINCT per subquery, and allows aggregating (SUM()) by sparql.
+Additional problems are the dataset: the 'totals' datacells are included in this query result, so the figures are incorrect...
+SELECT DISTINCT ?node ?parent ?value
+WHERE {
+    {
+        BIND("." AS ?node)
+        BIND("" AS ?parent)
+        BIND(0 AS ?value)
+    } UNION
+    {
+        BIND(0 AS ?value).
+        BIND("." AS ?parent).
+				[] d2s:dimension <http://www.data2semantics.org/data/BRT_1889_02_T1_marked/Table_1/TOTAAL_DER_MANNEN_EN_VROUWEN>;
+					d2s:dimension <http://www.data2semantics.org/data/BRT_1889_02_T1_marked/Table_1/G>;
+					d2s:dimension <http://www.data2semantics.org/data/BRT_1889_02_T1_marked/Table_1/56_0>;
+					ns1:Nummer_der_Beroepsklasse ?nummer;
+					<http://www.data2semantics.org/core/populationSize> ?popSize.
+				FILTER (?popSize > 0).
+				?nummer rdfs:label ?nodelabel.
+				BIND(?nodelabel AS ?node)
+       
+    } UNION 
+    {
+        BIND(0 AS ?value).
+        [] d2s:dimension <http://www.data2semantics.org/data/BRT_1889_02_T1_marked/Table_1/TOTAAL_DER_MANNEN_EN_VROUWEN>;
+					d2s:dimension <http://www.data2semantics.org/data/BRT_1889_02_T1_marked/Table_1/G>;
+					d2s:dimension <http://www.data2semantics.org/data/BRT_1889_02_T1_marked/Table_1/56_0>;
+					ns1:Letter__Onderdeel_beroepsklasse_ ?letter.
+				?letter rdfs:label ?nodelabel.
+        ?letter skos:broader ?nummer.
+				?nummer rdfs:label ?parent.
+        BIND(CONCAT(?parent, ".", ?nodelabel) AS ?node)
+    } UNION 
+    {
+         []  d2s:dimension <http://www.data2semantics.org/data/BRT_1889_02_T1_marked/Table_1/TOTAAL_DER_MANNEN_EN_VROUWEN>;
+						d2s:dimension <http://www.data2semantics.org/data/BRT_1889_02_T1_marked/Table_1/G>;
+						d2s:dimension <http://www.data2semantics.org/data/BRT_1889_02_T1_marked/Table_1/56_0>;
+						<http://www.data2semantics.org/core/populationSize> ?value;
+            <http://www.data2semantics.org/core/Table_1/BENAMING_van_de_onderdeelen_der_onderscheidene_beroepsklassen__met_de_daartoe_behoordende_beroepen> ?beroep .
+         FILTER (?value > 0).
+         ?beroep skos:broader ?letter.
+				 ?letter skos:broader ?nummer.
+				 ?beroep rdfs:label ?nodelabel.
+				 ?letter rdfs:label ?letterlabel.
+				 ?nummer rdfs:label ?nummerlabel.
+				 LET(?parent := CONCAT(?nummerlabel, ".", ?letterlabel))
+				 BIND(CONCAT(?parent, ".", ?nodelabel) AS ?node)
+    }
+}

@@ -82,6 +82,7 @@
            }
             
             sgvizler.queryOptions = localJosekiQueryOptions;
+            //sgvizler.queryOptions = localSesameQueryOptions;
             $(document).ready(sgvizler.go());
         </script>
     </head>
@@ -90,29 +91,51 @@
              data-sgvizler-query='SELECT DISTINCT ?node ?parent ?value
 WHERE {
     {
-        BIND("TOP" AS ?node)
+        BIND("." AS ?node)
         BIND("" AS ?parent)
         BIND(0 AS ?value)
     } UNION
     {
         BIND(0 AS ?value).
-        BIND("TOP" AS ?parent).
-        [] ns1:Nummer_der_Beroepsklasse ?node
+        BIND("." AS ?parent).
+				[] d2s:dimension &lt;http://www.data2semantics.org/data/BRT_1889_02_T1_marked/Table_1/TOTAAL_DER_MANNEN_EN_VROUWEN&gt;;
+					d2s:dimension &lt;http://www.data2semantics.org/data/BRT_1889_02_T1_marked/Table_1/G&gt;;
+					d2s:dimension &lt;http://www.data2semantics.org/data/BRT_1889_02_T1_marked/Table_1/56_0&gt;;
+					ns1:Nummer_der_Beroepsklasse ?nummer;
+					&lt;http://www.data2semantics.org/core/populationSize&gt; ?popSize.
+				FILTER (?popSize &gt; 0).
+				?nummer rdfs:label ?nodelabel.
+				BIND(?nodelabel AS ?node)
        
     } UNION 
     {
         BIND(0 AS ?value).
-        [] ns1:Letter__Onderdeel_beroepsklasse_ ?node.
-        ?node skos:broader ?parent
-        
+        [] d2s:dimension &lt;http://www.data2semantics.org/data/BRT_1889_02_T1_marked/Table_1/TOTAAL_DER_MANNEN_EN_VROUWEN&gt;;
+					d2s:dimension &lt;http://www.data2semantics.org/data/BRT_1889_02_T1_marked/Table_1/G&gt;;
+					d2s:dimension &lt;http://www.data2semantics.org/data/BRT_1889_02_T1_marked/Table_1/56_0&gt;;
+					ns1:Letter__Onderdeel_beroepsklasse_ ?letter.
+				?letter rdfs:label ?nodelabel.
+        ?letter skos:broader ?nummer.
+				?nummer rdfs:label ?parent.
+        BIND(CONCAT(?parent, ".", ?nodelabel) AS ?node)
     } UNION 
     {
-         []  &lt;http://www.data2semantics.org/core/populationSize&gt; ?value;
-            &lt;http://www.data2semantics.org/core/Table_1/BENAMING_van_de_onderdeelen_der_onderscheidene_beroepsklassen__met_de_daartoe_behoordende_beroepen&gt; ?node .
+         []  d2s:dimension &lt;http://www.data2semantics.org/data/BRT_1889_02_T1_marked/Table_1/TOTAAL_DER_MANNEN_EN_VROUWEN&gt;;
+						d2s:dimension &lt;http://www.data2semantics.org/data/BRT_1889_02_T1_marked/Table_1/G&gt;;
+						d2s:dimension &lt;http://www.data2semantics.org/data/BRT_1889_02_T1_marked/Table_1/56_0&gt;;
+						&lt;http://www.data2semantics.org/core/populationSize&gt; ?value;
+            &lt;http://www.data2semantics.org/core/Table_1/BENAMING_van_de_onderdeelen_der_onderscheidene_beroepsklassen__met_de_daartoe_behoordende_beroepen&gt; ?beroep .
          FILTER (?value &gt; 0).
-         ?node skos:broader ?parent
+         ?beroep skos:broader ?letter.
+				 ?letter skos:broader ?nummer.
+				 ?beroep rdfs:label ?nodelabel.
+				 ?letter rdfs:label ?letterlabel.
+				 ?nummer rdfs:label ?nummerlabel.
+				 LET(?parent := CONCAT(?nummerlabel, ".", ?letterlabel))
+				 BIND(CONCAT(?parent, ".", ?nodelabel) AS ?node)
     }
-}'
+}
+'
              data-sgvizler-chart="gTreeMap"
              style="width:600px; height:400px;"
              ></div> 
@@ -151,10 +174,6 @@ WHERE {
              style="width:1400px; height:600px;"
              ></div>-->
         
-
-
-
-
 
     </body>
 </html>
