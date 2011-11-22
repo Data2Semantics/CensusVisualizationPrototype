@@ -139,40 +139,22 @@ WHERE {
              data-sgvizler-chart="gTreeMap"
              style="width:600px; height:400px;"
              ></div> 
-<!--        <div id="table"
-             data-sgvizler-query='SELECT DISTINCT ?node ?parent ?value
-WHERE {
-    {
-        BIND("TOP" AS ?node)
-        BIND("" AS ?parent)
-        BIND(0 AS ?value)
-    } UNION
-    {
-        BIND(0 AS ?value).
-        BIND("TOP" AS ?parent).
-        [] ns1:Nummer_der_Beroepsklasse ?tmpnode.
-        ?tmpnode rdfs:haslabel ?node
-       
-    } UNION 
-    {
-        BIND(0 AS ?value).
-        [] ns1:Letter__Onderdeel_beroepsklasse_ ?tmpnode.
-        ?tmpnode rdfs:haslabel ?node.
-        ?tmpnode skos:broader ?parent
-        
-    } UNION 
-    {
-         []  &lt;http://www.data2semantics.org/core/populationSize&gt; ?value;
-            &lt;http://www.data2semantics.org/core/Table_1/BENAMING_van_de_onderdeelen_der_onderscheidene_beroepsklassen__met_de_daartoe_behoordende_beroepen&gt; ?tmpnode .
-         FILTER (?value &gt; 0).
-         ?tmpnode skos:broader ?tmpparent.
-         ?tmpnode rdfs:haslabel ?node.
-         ?tmpparent rdfs:haslabel ?parent
-    }
-} LIMIT 100'
-             data-sgvizler-chart="gTable"
-             style="width:1400px; height:600px;"
-             ></div>-->
+			<br><br><br><br><br><br>
+			<br><br><br><br><br><br>
+			<br><br><br><br><br><br>
+			</br>
+        <div id="map"
+					data-sgvizler-chart-options="showTip=true|mapType=normal"
+					data-sgvizler-chart="gMap"
+					style="width:800px; height:600px;"
+data-sgvizler-query='SELECT DISTINCT ?name ?gemeenteNaam 
+{
+	[] ns1:Gemeente ?gemeente.
+	?gemeente rdfs:label ?gemeenteNaam.
+	BIND(CONCAT("Nederland, ", ?gemeenteNaam) AS ?name)
+
+}' 
+             ></div>
         
 
     </body>

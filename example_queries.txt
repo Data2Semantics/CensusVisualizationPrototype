@@ -1,7 +1,3 @@
-ns1:Nummer_der_Beroepsklasse
-ns1:Letter__Onderdeel_beroepsklasse_
-<http://www.data2semantics.org/core/Table_1/BENAMING_van_de_onderdeelen_der_onderscheidene_beroepsklassen__met_de_daartoe_behoordende_beroepen>
-
 ====== Query for occupation treemap =====
 Several issues with this query: It uses LET (only supported by ARQ), because Joseki throws an incorrect error when using BIND in this specific situation...
 Additionally: this query is SLOW, because a large number of results are returned (~0.6 mb). Sparql subqueries not an alternative: based on join and not on union. 
@@ -53,4 +49,14 @@ WHERE {
 				 LET(?parent := CONCAT(?nummerlabel, ".", ?letterlabel))
 				 BIND(CONCAT(?parent, ".", ?nodelabel) AS ?node)
     }
+}
+
+
+====== Query for municipality map =====
+SELECT DISTINCT ?name ?name 
+{
+	[] ns1:Gemeente ?gemeente.
+	?gemeente rdfs:label ?gemeenteNaam.
+	BIND(CONCAT("Nederland, ", ?gemeenteNaam) AS ?name)
+
 }
