@@ -1,14 +1,19 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title>Demo Laurens (Sgvizler)</title>
-        <meta charset="UTF-8"/>
-        <link rel="shortcut icon" href="http://sgvizler.googlecode.com/svn/www/favicon.ico" />
-        <link rel="stylesheet" type="text/css" href="http://sgvizler.googlecode.com/svn/www/sgvizler.css" />
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-        <script type="text/javascript" id="sgvzlr_script" src="http://sgvizler.googlecode.com/svn/release/0.4/sgvizler.js"></script>
-        <script type="text/javascript">
+<head>
+<title>Census visualization demo</title>
+<meta charset="UTF-8" />
+
+<link rel="shortcut icon"
+	href="http://sgvizler.googlecode.com/svn/www/favicon.ico" />
+<link rel="stylesheet" type="text/css"
+	href="http://sgvizler.googlecode.com/svn/www/sgvizler.css" />
+<script type="text/javascript"
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript" id="sgvzlr_script"
+	src="http://sgvizler.googlecode.com/svn/release/0.4/sgvizler.js"></script>
+<script type="text/javascript">
             //// Query settings. The defaults settings are listed.
             sgvizler.queryOptions = {
                 'endpoint':             "http://sws.ifi.uio.no/sparql/world",
@@ -93,10 +98,11 @@
             //sgvizler.queryOptions = localSesameQueryOptions;
             $(document).ready(sgvizler.go());
         </script>
-    </head>
-    <body>
-                 <div id="treemap"
-             data-sgvizler-query='SELECT DISTINCT ?node ?parent ?value
+</head>
+<body>
+	<button onclick="parent.location='lifescience.html';">Life science demo</button>&nbsp;<button onclick="parent.location='census.html';">Census demo</button><br>
+	<div id="treemap"
+		data-sgvizler-query='SELECT DISTINCT ?node ?parent ?value
 WHERE {
     {
         BIND("." AS ?node)
@@ -144,14 +150,16 @@ WHERE {
     }
 }
 '
-             data-sgvizler-chart="gTreeMap"
-             style="width:800px; height:600px;"
-             ></div> 
-			<br/><br/><br/><br/><br/><br/>
-			
-                 <div id="orgchart"
-						data-sgvizler-chart-options="allowCollapse=true"
-             data-sgvizler-query='SELECT DISTINCT ?node ?parent
+		data-sgvizler-chart="gTreeMap" style="width: 800px; height: 600px;"></div>
+	<br />
+	<br />
+	<br />
+	<br />
+	<br />
+	<br />
+
+	<div id="orgchart" data-sgvizler-chart-options="allowCollapse=true"
+		data-sgvizler-query='SELECT DISTINCT ?node ?parent
 WHERE {
     {
         BIND("." AS ?node)
@@ -196,22 +204,43 @@ WHERE {
     }
 }
 '
-             data-sgvizler-chart="gOrgChart"
-             style="width:800px; height:600px;"
-             ></div> 
-			<br/><br/><br/><br/><br/><br/>
-        <div id="map"
-					data-sgvizler-chart-options="showTip=true|mapType=normal"
-					data-sgvizler-chart="gMap"
-					style="width:800px; height:600px;"
-data-sgvizler-query='SELECT DISTINCT ?name ?gemeenteNaam 
+		data-sgvizler-chart="gOrgChart" style="width: 800px; height: 600px;"></div>
+	<br />
+	<br />
+	<br />
+	<br />
+	<br />
+	<br />
+	<div id="map" data-sgvizler-chart-options="showTip=true|mapType=normal"
+		data-sgvizler-chart="gMap" style="width: 800px; height: 600px;"
+		data-sgvizler-query='SELECT DISTINCT ?name ?gemeenteNaam 
 {
 	[] ns1:Gemeente ?gemeente.
 	?gemeente rdfs:label ?gemeenteNaam.
 	BIND(CONCAT("Nederland, ", ?gemeenteNaam) AS ?name)
-} LIMIT 10' 
-             ></div>
-        
+} LIMIT 10'></div>
+	<br />
+	<br />
+	<br />
+	<br />
+	<br />
+	<br />
+	<div id="queryarea">
+		<pre id="sgvzlr_cPrefix"></pre>
+		<textarea id="sgvzlr_cQuery" rows="10" cols="80"></textarea>
+		<form method="get" id="sgvzlr_formQuery">
+			<p>
+				<input type="hidden" value="" name="query" id="sgvzlr_strQuery" />
+				Width: <input name="width" id="sgvzlr_strWidth" type="text" size="3" />
+				Height: <input name="height" id="sgvzlr_strHeight" type="text"
+					size="3" /> Chart Type: <select name="chart" id="sgvzlr_optChart"></select>
+				<input type="button" value="Reset" onclick="sgvizler.ui.resetPage()" />
+				<input type="button" value="GO!" onclick="sgvizler.ui.submitQuery()" />
+			</p>
+		</form>
+		<div id="sgvzlr_cMessage"></div>
+	</div>
+	<div id="sgvzlr_gchart" style="width: 800px; height: 400px;"></div>
 
-    </body>
+</body>
 </html>

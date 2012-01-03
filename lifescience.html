@@ -1,0 +1,143 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Lifescience visualization demo</title>
+
+<meta charset="UTF-8" />
+<link rel="shortcut icon"
+	href="http://sgvizler.googlecode.com/svn/www/favicon.ico" />
+<link rel="stylesheet" type="text/css"
+	href="http://sgvizler.googlecode.com/svn/www/sgvizler.css" />
+<script type="text/javascript"
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript" id="sgvzlr_script"
+	src="http://sgvizler.googlecode.com/svn/release/0.4/sgvizler.js"></script>
+<script type="text/javascript" src="customVisualizations.js"></script>
+<script type="text/javascript">
+	//// Query settings. The defaults settings are listed.
+	sgvizler.queryOptions = {
+		'endpoint' : "http://sws.ifi.uio.no/sparql/world",
+		// Endpoint output format. 
+		'endpoint_output' : 'json', // 'xml' or 'json' 
+		// This string is appended the 'endpoint' variable and the query to it again to give a link to the "raw" query results.
+		'endpoint_query_url' : "?output=text&amp;query=",
+		// URL to SPARQL validation service. The query is appended to it. 
+		'validator_query_url' : "http://www.sparql.org/query-validator?languageSyntax=SPARQL&amp;outputFormat=sparql&amp;linenumbers=true&amp;query=",
+		// Default chart type. 
+		'chart' : 'gLineChart',
+		// Default log level. Must be either 0, 1, or 2. 
+		'loglevel' : 2
+	};
+
+	// Prefixes
+	// Add convenient prefixes for your dataset. rdf, rdfs, xsd, owl
+	// are already set.  Examples: 
+	sgvizler.namespaces['d2s'] = 'http://www.data2semantics.org/core/';
+	sgvizler.namespaces['qb'] = 'http://purl.org/linked-data/cube#';
+	sgvizler.namespaces['skos'] = 'http://www.w3.org/2004/02/skos/core#';
+	sgvizler.namespaces['ns1'] = 'http://www.data2semantics.org/core/Table_1/';
+	sgvizler.namespaces['ns2'] = 'http://www.data2semantics.org/core/Table_1/2';
+	sgvizler.namespaces['ns3'] = 'http://www.data2semantics.org/core/Table_1/3';
+	sgvizler.namespaces['ns4'] = 'http://www.data2semantics.org/core/Table_1/12';
+	sgvizler.namespaces[''] = 'http://aers.data2semantics.org/vocab/';
+	
+
+	sgvizler.chartOptions = {
+		'width' : '800',
+		'height' : '400',
+		'chartArea' : {
+			left : '20%',
+			top : '5%',
+			width : '75%',
+			height : '80%'
+		},
+		'gGeoMap' : {
+			'dataMode' : 'markers'
+		},
+		'gMap' : {
+			'dataMode' : 'markers'
+		},
+		'sMap' : {
+			'dataMode' : 'markers',
+			'showTip' : true,
+			'useMapTypeControl' : true
+		}
+	};
+	
+	eculture4store = {
+		'endpoint' : "http://eculture2.cs.vu.nl:5021/sparql/",
+		'endpoint_output' : 'xml', // 'xml' or 'json' 
+		'endpoint_query_url' : "?output=json&amp;query=",
+		'validator_query_url' : "http://www.sparql.org/query-validator?languageSyntax=SPARQL&amp;outputFormat=sparql&amp;linenumbers=true&amp;query=",
+		'chart' : 'gLineChart',
+		'loglevel' : 2
+	}
+
+	sgvizler.queryOptions = eculture4store;
+	
+	$(document).ready(sgvizler.go());
+</script>
+<style type="text/css">
+span {
+  color: #777777;
+}</style>
+</head>
+<body>
+	<button onclick="parent.location='lifescience.html';">Life
+		science demo</button>
+	&nbsp;
+	<button onclick="parent.location='census.html';">Census demo</button>
+	<br><br>
+	<span>Top 10 drugs related to adverse events and Febril Neutropenia</span>
+	         <div id="pieChart"
+             data-sgvizler-query='
+SELECT ?drugLabel (count(?drugLabel) as ?count) {
+<http://aers.data2semantics.org/resource/reaction/FEBRILE_NEUTROPENIA> :reaction_of ?report.
+?involvement :involved_in ?report.
+?involvement :drug ?drug.
+?drug rdfs:label ?drugLabel.
+} GROUP BY ?drugLabel ORDER BY ?count'
+             data-sgvizler-chart="orderedPieChart"
+             style="width:800px; height:600px;"
+             ></div> 
+             <br/>
+             <br/>
+             <br/>
+             <br/>
+             <br/>
+             <br/>
+             <br/>
+ 		     <div id="table"
+             data-sgvizler-query='
+SELECT ?drugLabel (count(?drugLabel) as ?count) {
+<http://aers.data2semantics.org/resource/reaction/FEBRILE_NEUTROPENIA> :reaction_of ?report.
+?involvement :involved_in ?report.
+?involvement :drug ?drug.
+?drug rdfs:label ?drugLabel.
+} GROUP BY ?drugLabel ORDER BY ?count'
+             data-sgvizler-chart="orderedTable"
+             style="width:800px; height:600px;"
+             ></div>        
+             
+             
+             
+             
+	<div id="queryarea">
+		<pre id="sgvzlr_cPrefix"></pre>
+		<textarea id="sgvzlr_cQuery" rows="10" cols="80"></textarea>
+		<form method="get" id="sgvzlr_formQuery">
+			<p>
+				<input type="hidden" value="" name="query" id="sgvzlr_strQuery" />
+				Width: <input name="width" id="sgvzlr_strWidth" type="text" size="3" />
+				Height: <input name="height" id="sgvzlr_strHeight" type="text"
+					size="3" /> Chart Type: <select name="chart" id="sgvzlr_optChart"></select>
+				<input type="button" value="Reset" onclick="sgvizler.ui.resetPage()" />
+				<input type="button" value="GO!" onclick="sgvizler.ui.submitQuery()" />
+			</p>
+		</form>
+		<div id="sgvzlr_cMessage"></div>
+	</div>
+	<div id="sgvzlr_gchart" style="width: 800px; height: 400px;"></div>
+</body>
+</html>
