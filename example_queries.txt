@@ -60,3 +60,5 @@ SELECT DISTINCT ?name ?name
 	BIND(CONCAT("Nederland, ", ?gemeenteNaam) AS ?name)
 
 }
+
+
