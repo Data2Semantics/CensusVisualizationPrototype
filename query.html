@@ -85,32 +85,21 @@ span {
 </head>
 <body>
 	<button onclick="parent.location='lifescience.html';">Life science demo</button>&nbsp;<button onclick="parent.location='census.html';">Census demo</button>&nbsp;<button onclick="parent.location='query.html';">Manual Query</button><br><br>
-	<span>Top 10 drugs related to adverse events and Febril Neutropenia</span>
-	         <div id="pieChart"
-             data-sgvizler-query='
-SELECT ?drugLabel (count(?drugLabel) as ?count) {
-<http://aers.data2semantics.org/resource/reaction/FEBRILE_NEUTROPENIA> :reaction_of ?report.
-?involvement :involved_in ?report.
-?involvement :drug ?drug.
-?drug rdfs:label ?drugLabel.
-} GROUP BY ?drugLabel ORDER BY ?count'
-             data-sgvizler-chart="orderedPieChart"
-             style="width:800px; height:600px;"
-             ></div> 
-             <br/>
-             <br/>
-             <br/>
-             <br/>
-          	<span>Distribution of reported adverse events</span>
-	         <div id="geoChart"
-             data-sgvizler-query='
-SELECT ?countryLabel (COUNT(?countryLabel) as ?count)
-WHERE{
-	?report :reporter_country ?country.
-	?country rdfs:label ?countryLabel.
-} Group By ?countryLabel'
-             data-sgvizler-chart="gGeoChart"
-             style="width:800px; height:400px;"
-             ></div> 
+	<div id="queryarea">
+		<pre id="sgvzlr_cPrefix"></pre>
+		<textarea id="sgvzlr_cQuery" rows="10" cols="80"></textarea>
+		<form method="get" id="sgvzlr_formQuery">
+			<p>
+				<input type="hidden" value="" name="query" id="sgvzlr_strQuery" />
+				Width: <input name="width" id="sgvzlr_strWidth" type="text" size="3" />
+				Height: <input name="height" id="sgvzlr_strHeight" type="text"
+					size="3" /> Chart Type: <select name="chart" id="sgvzlr_optChart"></select>
+				<input type="button" value="Reset" onclick="sgvizler.ui.resetPage()" />
+				<input type="button" value="GO!" onclick="sgvizler.ui.submitQuery()" />
+			</p>
+		</form>
+		<div id="sgvzlr_cMessage"></div>
+	</div>
+	<div id="sgvzlr_gchart" style="width: 800px; height: 400px;"></div>
 </body>
 </html>

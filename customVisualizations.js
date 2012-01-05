@@ -1,5 +1,5 @@
 sgvizler.visualization.orderedTable = function(container) {
-	this.container = container
+	this.container = container;
 };
 sgvizler.visualization.orderedTable.prototype = {
 		id : "orderedTable",
@@ -19,7 +19,7 @@ sgvizler.visualization.orderedTable.prototype = {
 		}
 };
 sgvizler.visualization.orderedPieChart = function(container) {
-	this.container = container
+	this.container = container;
 };
 sgvizler.visualization.orderedPieChart.prototype = {
 		id : "orderedPieChart",
