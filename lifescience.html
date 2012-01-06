@@ -58,6 +58,12 @@
 		'gMap' : {
 			'dataMode' : 'markers'
 		},
+		'gGeoChart' : {
+			colorAxis: {
+				colors: ['#cccccc', '#b0c4b0', '#9bc49b', '#67b267', '#109618'],
+				values: [1, 5, 50, 150, 5000]
+			}
+		},
 		'sMap' : {
 			'dataMode' : 'markers',
 			'showTip' : true,
@@ -110,7 +116,7 @@ WHERE{
 	?country rdfs:label ?countryLabel.
 } Group By ?countryLabel'
              data-sgvizler-chart="gGeoChart"
-             style="width:800px; height:400px;"
+             style="width:600px; height:400px;"
              ></div> 
 </body>
 </html>
