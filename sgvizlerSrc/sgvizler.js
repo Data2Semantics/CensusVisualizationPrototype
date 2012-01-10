@@ -135,7 +135,7 @@ var sgvizler = {
             id: "gTable",
             name: "Table",
             func: google.visualization.Table
-        }]
+        }];
     },
     visualization: {},
     example: {},
@@ -152,13 +152,13 @@ var sgvizler = {
                 name: sgvizler.visualization[a].prototype.name,
                 func: sgvizler.visualization[a]
             });
-            sgvizler.draw()
-        })
+            sgvizler.draw();
+        });
     },
     draw: function () {
         var a = sgvizler.util.getUrlParams(),
             b = $.extend({}, sgvizler.queryOptionDefaults, a);
-        $("#" + sgvizler.html.prefixCon).length && sgvizler.ui.displayPrefixes(), $("#" + sgvizler.html.formChart).length && sgvizler.ui.displayChartTypesMenu(), $("#" + sgvizler.html.formQuery).length && sgvizler.ui.displayUserInput(b), $("#" + sgvizler.html.chartCon).length && a.query && (b.container = sgvizler.html.chartCon, sgvizler.drawChart(b, sgvizler.util.flattenChartOptions(b.chart))), sgvizler.drawContainerQueries()
+        $("#" + sgvizler.html.prefixCon).length && sgvizler.ui.displayPrefixes(), $("#" + sgvizler.html.formChart).length && sgvizler.ui.displayChartTypesMenu(), $("#" + sgvizler.html.formQuery).length && sgvizler.ui.displayUserInput(b), $("#" + sgvizler.html.chartCon).length && a.query && (b.container = sgvizler.html.chartCon, sgvizler.drawChart(b, sgvizler.util.flattenChartOptions(b.chart))), sgvizler.drawContainerQueries();
     },
     drawContainerQueries: function () {
         $("[" + sgvizler.html.queryOptionPrefix + "query]").each(function () {
@@ -170,17 +170,17 @@ var sgvizler = {
             for (var d = 0; d < this.attributes.length; d++) {
                 var e = this.attributes[d].name,
                     f = this.attributes[d].value;
-                e === sgvizler.html.chartOption ? c = sgvizler.util.getContainerChartOptions(f) : e.lastIndexOf(sgvizler.html.queryOptionPrefix, 0) === 0 && (b[e.substring(sgvizler.html.queryOptionPrefix.length)] = f)
+                e === sgvizler.html.chartOption ? c = sgvizler.util.getContainerChartOptions(f) : e.lastIndexOf(sgvizler.html.queryOptionPrefix, 0) === 0 && (b[e.substring(sgvizler.html.queryOptionPrefix.length)] = f);
             }
-            typeof b.rdf != "undefined" && (b.query = sgvizler.util.buildQueryWFrom(b.query, b.rdf)), c.width = $(this).css("width"), c.height = $(this).css("height"), b = $.extend(!0, {}, sgvizler.queryOptionDefaults, b), c = $.extend(sgvizler.util.flattenChartOptions(b.chart), c), sgvizler.drawChart(b, c)
-        })
+            typeof b.rdf != "undefined" && (b.query = sgvizler.util.buildQueryWFrom(b.query, b.rdf)), c.width = $(this).css("width"), c.height = $(this).css("height"), b = $.extend(!0, {}, sgvizler.queryOptionDefaults, b), c = $.extend(sgvizler.util.flattenChartOptions(b.chart), c), sgvizler.drawChart(b, c);
+        });
     },
     drawChart: function (a, b) {
         var c = sgvizler.util.getChartType(a.container, a.chart);
         sgvizler.runQuery(a, function (a) {
             var d = new google.visualization.DataTable(a);
-            c.draw(d, b)
-        })
+            c.draw(d, b);
+        });
     },
     runQuery: function (a, b) {
         sgvizler.ui.displayMessage(a.container, 1, a), a.encodedQuery = encodeURIComponent(sgvizler.util.getPrefixes() + a.query);
@@ -189,50 +189,50 @@ var sgvizler = {
                 d = a.endpoint + "?query=" + a.encodedQuery + "&output=" + a.endpoint_output;
             c.open("GET", d), c.onload = function () {
                 var d;
-                a.endpoint_output === "json" ? d = $.parseJSON(c.responseText) : d = $.parseXML(c.responseText), sgvizler.processQueryResults(d, a, b)
-            }, c.send()
+                a.endpoint_output === "json" ? d = $.parseJSON(c.responseText) : d = $.parseXML(c.responseText), sgvizler.processQueryResults(d, a, b);
+            }, c.send();
         } else $.get(a.endpoint, {
             query: sgvizler.util.getPrefixes() + a.query
         }, function (c) {
-            sgvizler.processQueryResults(c, a, b)
+            sgvizler.processQueryResults(c, a, b);
         }, a.endpoint_output).error(function () {
-            sgvizler.ui.displayMessage(a.container, 2, a)
-        })
+            sgvizler.ui.displayMessage(a.container, 2, a);
+        });
     },
     processQueryResults: function (a, b, c) {
         var d = null;
-        b.endpoint_output === "json" ? d = sgvizler.parser.countRowsSparqlJSON(a) : d = sgvizler.parser.countRowsSparqlXML(a), b.noRows = d, d === null ? sgvizler.ui.displayMessage(b.container, 3, b) : d === 0 ? sgvizler.ui.displayMessage(b.container, 4, b) : (sgvizler.ui.displayMessage(b.container, 5, b), b.endpoint_output === "json" ? a = sgvizler.parser.SparqlJSON2GoogleJSON(a) : a = sgvizler.parser.SparqlXML2GoogleJSON(a), c(a))
+        b.endpoint_output === "json" ? d = sgvizler.parser.countRowsSparqlJSON(a) : d = sgvizler.parser.countRowsSparqlXML(a), b.noRows = d, d === null ? sgvizler.ui.displayMessage(b.container, 3, b) : d === 0 ? sgvizler.ui.displayMessage(b.container, 4, b) : (sgvizler.ui.displayMessage(b.container, 5, b), b.endpoint_output === "json" ? a = sgvizler.parser.SparqlJSON2GoogleJSON(a) : a = sgvizler.parser.SparqlXML2GoogleJSON(a), c(a));
     },
     util: {
         buildQueryWFrom: function (a, b) {
             var c = b.split("|"),
                 d = "";
             for (var e in c) d += "FROM <" + c[e] + ">\n";
-            return a.replace(/(WHERE)?(\s)*\{/, "\n" + d + "WHERE {")
+            return a.replace(/(WHERE)?(\s)*\{/, "\n" + d + "WHERE {");
         },
         getContainerChartOptions: function (a) {
             var b = {},
                 c = a.split("|");
             for (var d in c) {
                 var e = c[d].split("=");
-                b[e[0]] = e[1]
+                b[e[0]] = e[1];
             }
-            return b
+            return b;
         },
         flattenChartOptions: function (a) {
             var b = sgvizler.chartOptionDefaults,
                 c = {};
             for (var d in b) if (d === a) for (var e in b[d]) c[e] = b[d][e];
             else c[d] = b[d];
-            return c
+            return c;
         },
         getChartType: function (a, b) {
             var c = document.getElementById(a),
                 d = sgvizler.chartTypes;
-            for (var e = 0; e < d.length; e++) if (b === d[e].id) return new d[e].func(c)
+            for (var e = 0; e < d.length; e++) if (b === d[e].id) return new d[e].func(c);
         },
         registerFunction: function (a) {
-            sgvizler.chartTypes.push(a)
+            sgvizler.chartTypes.push(a);
         },
         getUrlParams: function () {
             var a = {},
@@ -240,60 +240,60 @@ var sgvizler = {
                 c, d = /\+/g,
                 e = /([^&=]+)=?([^&]*)/g,
                 f = function (a) {
-                    return decodeURIComponent(a.replace(d, " "))
+                    return decodeURIComponent(a.replace(d, " "));
                 },
                 g = window.location.search.substring(1);
             while (c = e.exec(g)) c[2].length > 0 && $.inArray(c[1], b !== -1) && (a[f(c[1])] = f(c[2]));
-            return a
+            return a;
         },
         getPrefixes: function () {
             var a = "";
             for (var b in sgvizler.namespaces) a += "PREFIX " + b + ": <" + sgvizler.namespaces[b] + ">\n";
-            return a
+            return a;
         },
         prefixify: function (a) {
             for (var b in sgvizler.namespaces) if (a.lastIndexOf(sgvizler.namespaces[b], 0) === 0) return a.replace(sgvizler.namespaces[b], b + ":");
-            return a
+            return a;
         },
         unprefixify: function (a) {
             for (var b in sgvizler.namespaces) if (a.lastIndexOf(b + ":", 0) === 0) return a.replace(b + ":", sgvizler.namespaces[b]);
-            return a
+            return a;
         }
     },
     ui: {
         displayUserInput: function (a) {
-            $("#" + sgvizler.html.queryTxt).val(a.query), $("#" + sgvizler.html.formChart).val(a.chart), $("#" + sgvizler.html.formWidth).val(a.width), $("#" + sgvizler.html.formHeight).val(a.height)
+            $("#" + sgvizler.html.queryTxt).val(a.query), $("#" + sgvizler.html.formChart).val(a.chart), $("#" + sgvizler.html.formWidth).val(a.width), $("#" + sgvizler.html.formHeight).val(a.height);
         },
         displayChartTypesMenu: function () {
             var a = sgvizler.chartTypes;
-            for (var b = 0; b < a.length; b++) $("#" + sgvizler.html.formChart).append($("<option/>").val(a[b].id).html(a[b].name))
+            for (var b = 0; b < a.length; b++) $("#" + sgvizler.html.formChart).append($("<option/>").val(a[b].id).html(a[b].name));
         },
         displayMessage: function (a, b, c) {
             var d = "";
             if (c.loglevel === 0) return;
             if (c.loglevel === 1) {
                 if (b === 1) d = "Loading...";
-                else if (b === 2 || b === 3) d = "Error."
+                else if (b === 2 || b === 3) d = "Error.";
             } else b === 1 ? d = "<p>Sending query...</p>" : b === 2 ? (d = "<p>Error querying endpoint. Possible errors:<ul><li><a href='" + c.endpoint + "'>SPARQL endpoint</a> down?", typeof c.endpoint_query_url != "undefined" && (d += " <a href='" + c.endpoint + c.endpoint_query_url + c.encodedQuery + "'>" + "Check if query runs at the endpoint</a>"), d += ".</li><li>Malformed SPARQL query?", typeof c.validator_query_url != "undefined" && (d += " <a href='" + c.validator_query_url + c.encodedQuery + "'> Check if it validates</a>"), d += ".</li><li>CORS supported and enabled? If this page <code>" + sgvizler.home + "</code> and the SPARQL endpoint <code>" + c.endpoint + "</code> are <i>not</i> located at the same domain and port, does your " + "browser support CORS and is the endpoint CORS enabled? Read more about " + '<a href="http://code.google.com/p/sgvizler/wiki/Compatibility">CORS and compatibility</a>.</li>', d += '<li>Is your <a href="http://code.google.com/p/sgvizler/wiki/Compatibility">browser support</a>ed?.</li>', d += '<li>Hmm.. it might be a bug! Please file a report to <a href="http://code.google.com/p/sgvizler/issues/">the issues</a>.</li></ul></p>') : b === 3 ? d = "<p>Unknown error.</p>" : b === 4 ? d = "<p>Query returned no results.</p>" : b === 5 && (d = "<p>Received " + c.noRows + " rows. Drawing chart...", typeof c.endpoint_query_url != "undefined" && (d += "<br/><a target='_blank' href='" + c.endpoint + c.endpoint_query_url + c.encodedQuery + "'>" + "View query results</a> (in new window)."), d += "</p>");
-            a === sgvizler.html.chartCon && sgvizler.html.messageCon.length ? $("#" + sgvizler.html.messageCon).html(d) : $("#" + a).html(d)
+            a === sgvizler.html.chartCon && sgvizler.html.messageCon.length ? $("#" + sgvizler.html.messageCon).html(d) : $("#" + a).html(d);
         },
         displayPrefixes: function () {
-            $("#" + sgvizler.html.prefixCon).text(sgvizler.util.getPrefixes())
+            $("#" + sgvizler.html.prefixCon).text(sgvizler.util.getPrefixes());
         },
         resetPage: function () {
-            document.location = sgvizler.home
+            document.location = sgvizler.home;
         },
         submitQuery: function () {
-            $("#" + sgvizler.html.formQuery).val($("#" + sgvizler.html.queryTxt).val()), $("#" + sgvizler.html.queryForm).submit()
+            $("#" + sgvizler.html.formQuery).val($("#" + sgvizler.html.queryTxt).val()), $("#" + sgvizler.html.queryForm).submit();
         }
     },
     parser: {
         defaultGDatatype: "string",
         countRowsSparqlXML: function (a) {
-            return $(a).find("sparql").find("results").find("result").length
+            return $(a).find("sparql").find("results").find("result").length;
         },
         countRowsSparqlJSON: function (a) {
-            if (typeof a.results.bindings != "undefined") return a.results.bindings.length
+            if (typeof a.results.bindings != "undefined") return a.results.bindings.length;
         },
         SparqlXML2GoogleJSON: function (a) {
             var b = [],
@@ -302,24 +302,24 @@ var sgvizler = {
                 e = $(a).find("sparql").find("results").find("result"),
                 f = 0;
             $(a).find("sparql").find("head").find("variable").each(function () {
-                var a = null,
-                    c = null,
+                var c = null,
                     g = $(this).attr("name"),
                     h = $(e).find('binding[name="' + g + '"]');
                 if (h.length) {
                     var i = $(h).first().children().first()[0],
                         a = i.nodeName;
-                    c = $(i).attr("datatype")
+                    c = $(i).attr("datatype");
+                } else {
+                	a = null;
                 }
                 d[f] = sgvizler.parser.getGoogleJsonDatatype(a, c), b[f] = {
                     id: g,
                     label: g,
                     type: d[f]
-                }, f++
+                }, f++;
             });
             var g = 0;
             return $(e).each(function () {
-                var a = [];
                 for (var e = 0; e < b.length; e++) {
                     var f = null,
                         h = $(this).find('binding[name="' + b[e].id + '"]');
@@ -327,19 +327,19 @@ var sgvizler = {
                         var i = $(h).first().children().first()[0],
                             j = i.nodeName,
                             k = $(i).first().text();
-                        f = sgvizler.parser.getGoogleJsonValue(k, d[e], j)
+                        f = sgvizler.parser.getGoogleJsonValue(k, d[e], j);
                     }
                     a[e] = {
                         v: f
-                    }
+                    };
                 }
                 c[g] = {
                     c: a
-                }, g++
+                }, g++;
             }), {
                 cols: b,
                 rows: c
-            }
+            };
         },
         SparqlJSON2GoogleJSON: function (a) {
             var b = [],
@@ -356,7 +356,7 @@ var sgvizler = {
                     id: e[g],
                     label: e[g],
                     type: d[g]
-                }
+                };
             }
             for (var h = 0; h < f.length; h++) {
                 var k = f[h],
@@ -365,19 +365,19 @@ var sgvizler = {
                     var m = null;
                     typeof k[e[g]] != "undefined" && typeof k[e[g]].value != "undefined" && (m = sgvizler.parser.getGoogleJsonValue(k[e[g]].value, d[g], k[e[g]].type)), l[g] = {
                         v: m
-                    }
+                    };
                 }
                 c[h] = {
                     c: l
-                }
+                };
             }
             return {
                 cols: b,
                 rows: c
-            }
+            };
         },
         getGoogleJsonValue: function (a, b, c) {
-            return b === "number" ? Number(a) : b === "date" ? new Date(a.substr(0, 4), a.substr(5, 2), a.substr(8, 2)) : b === "datetime" ? new Date(a.substr(0, 4), a.substr(5, 2), a.substr(8, 2), a.substr(11, 2), a.substr(14, 2), a.substr(17, 2)) : b === "timeofday" ? [a.substr(0, 2), a.substr(3, 2), a.substr(6, 2)] : c === "uri" ? sgvizler.util.prefixify(a) : a
+            return b === "number" ? Number(a) : b === "date" ? new Date(a.substr(0, 4), a.substr(5, 2), a.substr(8, 2)) : b === "datetime" ? new Date(a.substr(0, 4), a.substr(5, 2), a.substr(8, 2), a.substr(11, 2), a.substr(14, 2), a.substr(17, 2)) : b === "timeofday" ? [a.substr(0, 2), a.substr(3, 2), a.substr(6, 2)] : c === "uri" ? sgvizler.util.prefixify(a) : a;
         },
         getGoogleJsonDatatype: function (a, b) {
             if (typeof a != "undefined" && (a === "typed-literal" || a === "literal")) {
@@ -385,9 +385,9 @@ var sgvizler = {
                 if (b === "http://www.w3.org/2001/XMLSchema#boolean") return "boolean";
                 if (b === "http://www.w3.org/2001/XMLSchema#date") return "date";
                 if (b === "http://www.w3.org/2001/XMLSchema#dateTime") return "datetime";
-                if (b === "http://www.w3.org/2001/XMLSchema#time") return "timeofday"
+                if (b === "http://www.w3.org/2001/XMLSchema#time") return "timeofday";
             }
-            return sgvizler.parser.defaultGDatatype
+            return sgvizler.parser.defaultGDatatype;
         }
     }
 };
@@ -396,4 +396,4 @@ jQuery.ajaxSetup({
         xml: "application/sparql-results+xml",
         json: "application/sparql-results+json"
     }
-})
+});
